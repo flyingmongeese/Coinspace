@@ -43,7 +43,7 @@ class App extends React.Component {
       chartDataSet:[],
       chartBGcolor:'',
       chartBorderColor: '',
-      renderedPage: 'Markets',
+      renderedPage: 'Charts',
       openLogin: false,
       userLogin: false,
       chatOpen: false,
@@ -64,6 +64,10 @@ class App extends React.Component {
     axios.get('/sign/auth')
       .then(response => {
         app.setState({userLogin: response.data.authRes});
+      })
+    axios.get('/authenticate')
+      .then(response => {
+        app.setState({isLoggedIn: response.data.loggedin});
       })
   }
 
@@ -207,7 +211,7 @@ class App extends React.Component {
             coin <b><font color="black">re</font></b>base
           </Header>
             <Menu.Menu position='right'>
-              <Menu.Item name='Markets' active={renderedPage === 'Markets'} onClick={this.changePage}><Icon name='line chart'/>Markets</Menu.Item>
+              {this.state.userLogin? <Menu.Item name='Markets' active={renderedPage === 'Markets'} onClick={this.changePage}><Icon name='line chart'/>Markets</Menu.Item> : null}
               <Menu.Item name='Charts' active={renderedPage === 'Charts'} onClick={this.changePage}><Icon name='line chart'/>Charts</Menu.Item>
               {this.state.userLogin ? null : <Menu.Item name='Login' active={this.state.openLogin} onClick={this.openLoginModal.bind(this)}><Icon name='key'/>Login</Menu.Item>}
               {this.state.openLogin ? <Login userLogin={this.userLogin.bind(this)} userLogout={this.userLogout.bind(this)} openLogin={this.state.openLogin} closeLoginModal={this.closeLoginModal.bind(this)}/> : null}
